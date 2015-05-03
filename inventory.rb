@@ -27,12 +27,12 @@ class Inventory
   end
 
   def Klass_for(filename)
-    case filename
-    when /\.pipe$/.match(filename)
+    case
+    when filename.match(/\.pipe$/)
       PipeFile
-    when /\.csv$/.match(filename)
+    when filename.match(/\.csv$/)
       CsvFile
-    when /\.json/.match(filename)
+    when filename.match(/\.json/)
       JsonFile
     else
       raise "#{filename} does not have a recognized file type"
