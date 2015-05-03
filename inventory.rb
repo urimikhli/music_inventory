@@ -4,8 +4,9 @@ class Inventory
 
   INVETORYSTORE = 'db/inventory.json'
 
-  def initilize
     @records = load_file(INVETORYSTORE)
+  def initialize
+
   end
 
   def load_new_inventory(filename)
