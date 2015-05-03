@@ -1,6 +1,12 @@
 #the inventory
 class Inventory
+  attr_accessor @records
 
+  INVETORYSTORE = 'db/inventory.json'
+
+  def initilize
+    @records = load_file(INVETORYSTORE)
+  end
 
   def load_new_inventory(filename)
   end
