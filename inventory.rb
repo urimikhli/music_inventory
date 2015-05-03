@@ -1,15 +1,20 @@
 #the inventory
+#
+require 'csv'
 class Inventory
-  attr_accessor :records
+  attr_accessor :records, :file, :new_records
 
   INVETORYSTORE = 'db/inventory.json'
 
   def initialize
+    puts INVETORYSTORE
     @file = load_file(INVETORYSTORE.to_s)
     @records = import_file(INVETORYSTORE.to_s)
   end
 
   def load_new_inventory(filename)
+    @file = load_file(filename)
+    @new_records = import_file(filename)
   end
 
   def search_inventory(search_field, query)
@@ -61,11 +66,12 @@ class Inventory
 
     def import_file(filename)
       records = []
-      csv_headers = %w('artist','title','format','year')
+      csv_headers = %w('artist' 'title' 'format' 'year')
       raise "no file found " unless File.exist?(filename)
       CSV.foreach(filename, :headers => csv_headers) do |row|
         records.push row
       end
+      records
     end
   end
 
