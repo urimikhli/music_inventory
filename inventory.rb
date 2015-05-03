@@ -17,4 +17,12 @@ class Inventory
   def purchase(uid)
   end
 
+  private
+
+  def load_file(filename)
+    raise "no file found " unless File.exist?(filename)
+    #figure out file extension , load appropriate class, import the file
+    #@records = ...
+  end
+
 end
