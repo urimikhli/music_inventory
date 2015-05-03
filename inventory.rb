@@ -45,12 +45,22 @@ class Inventory
   end
 
   class JsonFile
-    def self.import_file(filename)
+    attr_accessor :records
+    def initialize(filename)
+      import_file(filename)
+    end
+
+    def import_file(filename)
     end
   end
 
   class CsvFile
-    def self.import_file(filename)
+    attr_accessor :records
+    def initialize(filename)
+      import_file(filename)
+    end
+
+    def import_file(filename)
       records = []
       csv_headers = %w('artist','title','format','year')
       raise "no file found " unless File.exist?(filename)
@@ -61,7 +71,12 @@ class Inventory
   end
 
   class PipeFile
-    def self.import_file(filename)
+    attr_accessor :records
+    def initialize(filename)
+      import_file(filename)
+    end
+
+    def import_file(filename)
     end
   end
 end
