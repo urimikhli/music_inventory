@@ -4,9 +4,10 @@ class Inventory
 
   INVETORYSTORE = 'db/inventory.json'
 
-    @records = load_file(INVETORYSTORE)
   def initialize
 
+    @file = load_file(INVETORYSTORE)
+    @records = import_file(INVETORYSTORE)
   end
 
   def load_new_inventory(filename)
@@ -23,8 +24,11 @@ class Inventory
   def load_file(filename)
     raise "no file found " unless File.exist?(filename)
     #figure out file extension , load appropriate class, import the file
-    @records = Klass_for(filename).import_file(filename)
+    @file = Klass_for(filename).new(filename)
+  end
 
+  def import_file(filename)
+   file.import_file(filename)
   end
 
   def Klass_for(filename)
