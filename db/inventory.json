@@ -1,14 +1,14 @@
 [ {
-    "artist": "Nas",
-    "title": "illmatic",
-    "year": "1994",
+    "artist": "yoyo",
+    "title": "ma",
+    "year": "1964",
     "formats": [
       {
-        "uid": "Nasillmatic1994CD",
+        "uid": "yoyomaCD",
         "format": "CD",
         "quantity": 3
       },{
-        "uid": "Nasillmatic1994Tape",
+        "uid": "yoyomaTape",
         "format": "Tape",
         "quantity": 2
       }
