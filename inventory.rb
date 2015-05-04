@@ -2,6 +2,7 @@
 #
 require 'csv'
 require 'json'
+require 'byebug'
 
 class Inventory
   attr_accessor :records, :file, :new_records
@@ -104,6 +105,7 @@ class Inventory
       else #create the record
         uids.push(row["artist"] + row["title"] + row["year"] + row["format"])
         records.push (
+      #byebug
         {
           "uid": row["artist"] + row["title"] + row["year"]
           "artist": row["artist"],
