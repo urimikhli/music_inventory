@@ -1,2 +1,17 @@
-{
-}
+[ {
+    "artist": "Nas",
+    "title": "illmatic",
+    "year": "1994",
+    "formats": [
+      {
+        "uid": "Nasillmatic1994CD",
+        "format": "CD",
+        "quantity": 3
+      },{
+        "uid": "Nasillmatic1994Tape",
+        "format": "Tape",
+        "quantity": 2
+      }
+    ]
+  }
+]

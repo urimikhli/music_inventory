@@ -1,6 +1,8 @@
 #the inventory
 #
 require 'csv'
+require 'json'
+
 class Inventory
   attr_accessor :records, :file, :new_records
 
@@ -32,7 +34,8 @@ class Inventory
   end
 
   def import_file(filename)
-   file.import_file(filename)
+    raise "no file found " unless File.exist?(filename)
+    file.import_file(filename)
   end
 
   def Klass_for(filename)
@@ -55,6 +58,7 @@ class Inventory
     end
 
     def import_file(filename)
+      JSON.parse(IO.read(filename))
     end
   end
 
@@ -67,7 +71,6 @@ class Inventory
     def import_file(filename)
       records = []
       csv_headers = %w('artist' 'title' 'format' 'year')
-      raise "no file found " unless File.exist?(filename)
       CSV.foreach(filename, :headers => csv_headers) do |row|
         records.push row
       end
