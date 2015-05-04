@@ -1,10 +1,11 @@
 [ {
+    "uid": "yoyoma1964",
     "artist": "yoyo",
     "title": "ma",
     "year": "1964",
     "formats": [
       {
-        "uid": "yoyomaCD",
+        "uid": "yoyoma1964CD",
         "format": "CD",
         "quantity": 3
       },{
