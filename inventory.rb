@@ -10,7 +10,6 @@ class Inventory
   INVETORYSTORE = 'db/inventory.json'
 
   def initialize
-    puts INVETORYSTORE
     @file = load_file(INVETORYSTORE.to_s)
     @records = import_file(INVETORYSTORE.to_s)
   end
@@ -35,7 +34,7 @@ class Inventory
   end
 
   def import_file(filename)
-    raise "no file found " unless File.exist?(filename)
+    raise "no file found #{filename}" unless File.exist?(filename)
     file.import_file(filename)
   end
 
@@ -73,7 +72,6 @@ class Inventory
       records = []
       csv_headers = %w('artist' 'title' 'format' 'year')
       CSV.foreach(filename, :headers => csv_headers) do |row|
-        puts row.inspect
         convert_to_inventory(row,records)
       end
       records
