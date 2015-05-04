@@ -65,6 +65,8 @@ class Inventory
   class CsvFile
     attr_accessor :records, :uids
     def initialize(filename)
+      @uids=[]
+      @format_uids=[]
       import_file(filename)
     end
 
@@ -72,52 +74,67 @@ class Inventory
       records = []
       csv_headers = %w('artist' 'title' 'format' 'year')
       CSV.foreach(filename, :headers => csv_headers) do |row|
-        convert_to_inventory(row,records)
+        records.push convert_to_inventory(row)
       end
+
+      #update qty on existing formats
+      records.each do |record|
+        record["formats"].each do |format|
+          if format_uids.select{|x| x.match(format["uid"])}
+            format["quantity"] += 1
+          end
+        end
+      end
+
+
+
       records
     end
     private
-    def convert_to_inventory(row, records)
-      uid = row["'artist'"].to_s + row["'title'"].to_s + row["'year'"].to_s
-      if uids.select{|x| x.match(uid)} #does this record exist yet
-        self.records.each do |record|
-          if record["uid"].match(uid) #find the record we are intersted in
-            if record["formats"].select{|x| x.format.match(row["format"])} #does the format already exist
-              record["formats"].each do |format|
-                if format["format"].match(row["format"]) #find format we are intersted in
-                  format["quantity"] += 1 #increment quantity
-                  break
-                end
-              end
-            else #new format for this item
-              record["formats"].push(
-                  {
-                  "uid":  uid + row["format"].to_s,
-                  "format": row["format"],
-                  "quantity": 1
-                  })
-            end
-            break
-          end
-        end
-      else #create the record
-        uids.push(row["artist"] + row["title"] + row["year"] + row["format"])
-        records.push (
+    def convert_to_inventory(row)
+      inventory_uid = row["'artist'"].to_s + row["'title'"].to_s + row["'year'"].to_s
+      format_uid = row["'artist'"].to_s + row["'title'"].to_s + row["'year'"].to_s + row["format"].to_s
       #byebug
+      if uids.select{|x| x.match(inventory_uid)}.empty? #create the record
+        uids.push(row["artist"].to_s + row["title"].to_s + row["year"].to_s + row["format"].to_s)
+
         {
-          "uid": row["artist"] + row["title"] + row["year"]
-          "artist": row["artist"],
-          "title": row["title"],
-          "year": row["year"],
-          "formats": [
+          "uid" =>  row["artist"].to_s + row["title"].to_s + row["year"].to_s,
+          "artist" =>  row["artist"],
+          "title" =>  row["title"],
+          "year" =>  row["year"],
+          "formats" =>  [
             {
-              "uid":  row["artist"] + row["title"] + row["year"] + row["format"],
-              "format": row["format"],
-              "quantity": 1
+              "uid" =>   row["artist"].to_s + row["title"].to_s + row["year"].to_s + row["format"].to_s,
+              "format" =>  row["format"],
+              "quantity" =>  1
             }
           ]
         }
-        )
+
+      else #update the record
+        format_uids.push format_uid
+
+        #records.each do |record|
+        #  if record["uid"].match(inventory_uid) #find the record we are intersted in
+        #    if record["formats"].select{|x| x.format.match(row["format"])} #does the format already exist
+        #      record["formats"].each do |format|
+        #        if format["format"].match(row["format"]) #find format we are intersted in
+        #          format["quantity"] += 1 #increment quantity
+        #          break
+        #        end
+        #      end
+        #    else #new format for this item
+        #      record["formats"].push(
+        #          {
+        #          "uid" =>  format_uid,
+        #          "format" => row["format"],
+        #          "quantity" => 1
+        #          })
+        #    end
+        #    break
+        #  end
+        #end
 
       end
 
