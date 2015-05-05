@@ -72,7 +72,7 @@ class Inventory
 
     def import_file(filename)
       records = []
-      csv_headers = %w('artist' 'title' 'format' 'year')
+      csv_headers = %w(artist title format year)
       CSV.foreach(filename, :headers => csv_headers) do |row|
         records.push convert_to_inventory(row)
       end
