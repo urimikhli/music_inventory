@@ -63,7 +63,7 @@ class Inventory
   end
 
   class CsvFile
-    attr_accessor :records, :uids
+    attr_accessor :new_records, :uids
     def initialize(filename)
       @uids=[]
       @format_uids=[]
@@ -71,24 +71,12 @@ class Inventory
     end
 
     def import_file(filename)
-      records = []
+      new_records = []
       csv_headers = %w(artist title format year)
       CSV.foreach(filename, :headers => csv_headers) do |row|
-        records.push convert_to_inventory(row)
+         new_records.push convert_to_inventory(row)
       end
-
-      #update qty on existing formats
-      records.each do |record|
-        record["formats"].each do |format|
-          if format_uids.select{|x| x.match(format["uid"])}
-            format["quantity"] += 1
-          end
-        end
-      end
-
-
-
-      records
+      new_records
     end
     private
     def convert_to_inventory(row)
