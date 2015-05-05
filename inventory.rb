@@ -80,12 +80,7 @@ class Inventory
     end
     private
     def convert_to_inventory(row)
-      inventory_uid = row["'artist'"].to_s + row["'title'"].to_s + row["'year'"].to_s
-      format_uid = row["'artist'"].to_s + row["'title'"].to_s + row["'year'"].to_s + row["format"].to_s
-      #byebug
-      if uids.select{|x| x.match(inventory_uid)}.empty? #create the record
-        uids.push(row["artist"].to_s + row["title"].to_s + row["year"].to_s + row["format"].to_s)
-
+      #dont care about the dupes, can get rid of them more easily when merging into the inventory records
         {
           "uid" =>  row["artist"].to_s + row["title"].to_s + row["year"].to_s,
           "artist" =>  row["artist"],
@@ -99,34 +94,6 @@ class Inventory
             }
           ]
         }
-
-      else #update the record
-        format_uids.push format_uid
-
-        #records.each do |record|
-        #  if record["uid"].match(inventory_uid) #find the record we are intersted in
-        #    if record["formats"].select{|x| x.format.match(row["format"])} #does the format already exist
-        #      record["formats"].each do |format|
-        #        if format["format"].match(row["format"]) #find format we are intersted in
-        #          format["quantity"] += 1 #increment quantity
-        #          break
-        #        end
-        #      end
-        #    else #new format for this item
-        #      record["formats"].push(
-        #          {
-        #          "uid" =>  format_uid,
-        #          "format" => row["format"],
-        #          "quantity" => 1
-        #          })
-        #    end
-        #    break
-        #  end
-        #end
-
-      end
-
-
     end
   end
 
