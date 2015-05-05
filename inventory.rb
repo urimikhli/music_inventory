@@ -63,10 +63,8 @@ class Inventory
   end
 
   class CsvFile
-    attr_accessor :new_records, :uids
+    attr_accessor :new_records
     def initialize(filename)
-      @uids=[]
-      @format_uids=[]
       import_file(filename)
     end
 
