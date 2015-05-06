@@ -28,7 +28,7 @@ class Inventory
   def load_file(filename)
     raise "no file found " unless File.exist?(filename)
     #figure out file extension , load appropriate class, import the file
-    Klass_for(filename).new(filename).import_file(filename)
+    Klass_for(filename).new().import_file(filename)
   end
 
   def Klass_for(filename)
@@ -45,20 +45,12 @@ class Inventory
   end
 
   class JsonFile
-    attr_accessor :records
-    def initialize(filename)
-    end
-
     def import_file(filename)
       JSON.parse(IO.read(filename))
     end
   end
 
   class CsvFile
-    attr_accessor :new_records
-    def initialize(filename)
-    end
-
     def import_file(filename,col_sep= ',',headers = %w(artist title format year))
       new_records = []
       CSV.foreach(filename, {:col_sep => col_sep, :headers => headers}) do |row|
@@ -86,9 +78,6 @@ class Inventory
   end
 
   class PipeFile < CsvFile
-    attr_accessor :new_records
-    def initialize(filename)
-    end
     def import_file(filename,col_sep=' | ',headers = %w(quanitity format release year artist title))
       super(filename,col_sep,headers)
     end
