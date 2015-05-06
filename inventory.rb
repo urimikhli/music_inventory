@@ -15,6 +15,7 @@ class Inventory
 
   def load_new_inventory(filename)
     @new_records = load_file(filename)
+    persist(merge_records_sets(records,new_records))
   end
 
   def search_inventory(search_field, query)
@@ -24,6 +25,12 @@ class Inventory
   end
 
   private
+
+  def merge_records_sets(new, current)
+  end
+
+  def persist(inventory_records)
+  end
 
   def load_file(filename)
     raise "no file found " unless File.exist?(filename)
