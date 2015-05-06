@@ -5,18 +5,16 @@ require 'json'
 require 'byebug'
 
 class Inventory
-  attr_accessor :records, :file, :new_records
+  attr_accessor :records, :new_records
 
   INVETORYSTORE = 'db/inventory.json'
 
   def initialize
-    @file = load_file(INVETORYSTORE.to_s)
-    @records = import_file(INVETORYSTORE.to_s)
+    @records = load_file(INVETORYSTORE.to_s)
   end
 
   def load_new_inventory(filename)
-    @file = load_file(filename)
-    @new_records = import_file(filename)
+    @new_records = load_file(filename)
   end
 
   def search_inventory(search_field, query)
@@ -30,12 +28,7 @@ class Inventory
   def load_file(filename)
     raise "no file found " unless File.exist?(filename)
     #figure out file extension , load appropriate class, import the file
-    Klass_for(filename).new(filename)
-  end
-
-  def import_file(filename)
-    raise "no file found #{filename}" unless File.exist?(filename)
-    file.import_file(filename)
+    Klass_for(filename).new(filename).import_file(filename)
   end
 
   def Klass_for(filename)
