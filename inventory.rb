@@ -86,14 +86,14 @@ class Inventory
 
   def output(view_records)
     view_records.each do |record|
-      puts "
-Artist: #{record['artist']}
-Album:  #{record['title']}
-Released: #{record['year']}
-"
+      puts "Artist: #{record['artist']}"
+      puts "Album:  #{record['title']}"
+      puts "Released: #{record['year']}"
+
       record["formats"].each do |format|
         puts "#{format['format']}(#{format['quantity']}): #{format['uid']}"
       end
+      puts ""
     end
   end
 
