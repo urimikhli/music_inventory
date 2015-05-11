@@ -39,33 +39,6 @@ class Inventory
 
   private
 
-  def decrement_quantity(purchase_format)
-    purchase_format["quantity"] -= 1
-  end
-
-  def cleanup_inventory(album)
-    album["formats"].delete_if {|x| x['quantity'] == 0}
-    @records.delete_if {|x| x["formats"].empty?}
-  end
-
-  def format_search(album_formats =[], format_uid)
-    album_formats.select{|y| format_uid.downcase == y["uid"].downcase }.last
-  end
-
-  def album_search(format_uid)
-    @records.select{|x| /#{x["uid"].downcase}/.match(format_uid.downcase) }.last
-  end
-
-  def records_search(search_field, query_field)
-    @records.select{|x| /#{query_field.downcase}/.match(x[search_field].downcase) }.sort_by { |hsh| hsh[search_field] }
-  end
-
-  def persist
-    #the concept is that the file will be overwritten everytime
-    File.open(INVENTORYSTORE.to_s,"w"){ |f| f << JSON.pretty_generate(@records)}
-    @records
-  end
-
   def load_file(filename)
     raise "no file found " unless File.exist?(filename)
     #figure out file extension , load appropriate class, import the file
@@ -117,6 +90,16 @@ class Inventory
     current_inventory
   end
 
+  def persist
+    #the concept is that the file will be overwritten everytime
+    File.open(INVENTORYSTORE.to_s,"w"){ |f| f << JSON.pretty_generate(@records)}
+    @records
+  end
+
+  def records_search(search_field, query_field)
+    @records.select{|x| /#{query_field.downcase}/.match(x[search_field].downcase) }.sort_by { |hsh| hsh[search_field] }
+  end
+
   def output(view_records)
     view_records.each do |record|
       puts "Artist: #{record['artist']}"
@@ -128,6 +111,23 @@ class Inventory
       end
       puts ""
     end
+  end
+
+  def album_search(format_uid)
+    @records.select{|x| /#{x["uid"].downcase}/.match(format_uid.downcase) }.last
+  end
+
+  def format_search(album_formats =[], format_uid)
+    album_formats.select{|y| format_uid.downcase == y["uid"].downcase }.last
+  end
+
+  def decrement_quantity(purchase_format)
+    purchase_format["quantity"] -= 1
+  end
+
+  def cleanup_inventory(album)
+    album["formats"].delete_if {|x| x['quantity'] == 0}
+    @records.delete_if {|x| x["formats"].empty?}
   end
 
   class JsonFile
