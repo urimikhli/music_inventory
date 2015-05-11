@@ -24,11 +24,11 @@ class Inventory
 
   def purchase(format_uid)
     album = format_search(format_uid)
-    raise "The uid: #{format_uid} does not exist." if album.nil?
+    return puts "The uid: #{format_uid} does not exist." if album.nil?
 
     purchase_format = album["formats"].select{|y| format_uid.downcase == y["uid"].downcase }.last
 
-    raise "There is no album #{format_uid} available in the inventory" if purchase_format.nil?
+    return puts "There is no album #{format_uid} available in the inventory" if purchase_format.nil?
 
     purchase_format["quantity"] -= 1
 
