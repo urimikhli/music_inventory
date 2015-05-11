@@ -67,12 +67,12 @@ class Inventory
 
         current_inventory.each do |record|
           if uid == record["uid"].downcase
-            formats = record["formats"].select{|x| x["format"] == row_format}
+            formats = record["formats"].select{|x| x["format"].downcase == row_format.downcase}
             if formats.empty?
               record["formats"].push(
               {
-                "uid" =>  format_uid,
-                "format" => row_format,
+                "uid" =>  format_uid.delete(' '),
+                "format" => row_format.downcase.eql?("cd") ? row_format.upcase : row_format.capitalize,
                 "quantity" => 1
               })
             else
@@ -114,15 +114,18 @@ Released: #{record['year']}
     end
     private
     def convert_to_hash(row)
+      uid = row["artist"].to_s + row["title"].to_s + row["year"].to_s
+      format_uid = row["artist"].to_s + row["title"].to_s + row["year"].to_s + row["format"].to_s
+      row_format = row["format"].to_s
       {
-          "uid" =>  row["artist"].to_s + row["title"].to_s + row["year"].to_s,
+          "uid" =>  uid.delete(' '),
           "artist" =>  row["artist"],
           "title" =>  row["title"],
           "year" =>  row["year"],
           "formats" =>  [
             {
-              "uid" =>   row["artist"].to_s + row["title"].to_s + row["year"].to_s + row["format"].to_s,
-              "format" =>  row["format"],
+              "uid" =>  format_uid.delete(' '),
+              "format" => row_format.downcase.eql?("cd") ? row_format.upcase : row_format.capitalize,
               "quantity" =>  1
             }
           ]
