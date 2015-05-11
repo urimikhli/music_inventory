@@ -5,7 +5,7 @@ require 'json'
 require 'byebug'
 
 class Inventory
-  attr_accessor :records, :new_records
+  attr_accessor :records
 
   INVETORYSTORE = 'db/inventory.json'
 
