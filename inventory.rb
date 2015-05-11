@@ -14,8 +14,7 @@ class Inventory
   end
 
   def load_new_inventory(filename)
-    @new_records = load_file(filename)
-    persist(merge_records_sets(records,new_records))
+    @records = merge_records_sets(records,load_file(filename))
   end
 
   def search_inventory(search_field, query)
@@ -25,9 +24,6 @@ class Inventory
   end
 
   private
-
-  def merge_records_sets(new, current)
-  end
 
   def persist(inventory_records)
   end
@@ -51,6 +47,40 @@ class Inventory
     end
   end
 
+  def merge_records_sets(current_inventory, simple_records)
+    format_uid = []
+    uid = []
+    simple_records.each do |row|
+
+      if current_inventory.select{|x| x["uid"] == row["uid"]}.empty? #find the record we are intersted in
+        current_inventory.push row
+      else
+        uid = row["uid"]
+        row_format =  row["formats"][0]["format"]
+        format_uid =  row["formats"][0]["uid"]
+
+        current_inventory.each do |record|
+          if uid == record["uid"]
+            formats = record["formats"].select{|x| x["format"] == row_format}
+            if formats.empty?
+              record["formats"].push(
+              {
+                "uid" =>  format_uid,
+                "format" => row_format,
+                "quantity" => 1
+              })
+            else
+              formats[0]["quantity"] += 1 #increment quantity
+            end
+          end
+        end
+      end
+    end
+    current_inventory
+  end
+
+
+
   class JsonFile
     def import_file(filename)
       JSON.parse(IO.read(filename))
@@ -63,7 +93,7 @@ class Inventory
       CSV.foreach(filename, {:col_sep => col_sep, :headers => headers}) do |row|
         simple_records.push convert_to_hash(row)
       end
-      convert_to_inventory(simple_records)
+      simple_records
     end
     private
     def convert_to_hash(row)
@@ -81,39 +111,7 @@ class Inventory
           ]
         }
     end
-    def convert_to_inventory(simple_records)
-      format_uid = []
-      uid = []
-      new_records = []
-      simple_records.each do |row|
-
-        if new_records.select{|x| x["uid"] == row["uid"]}.empty? #find the record we are intersted in
-          new_records.push row
-        else
-          uid = row["uid"]
-          row_format =  row["formats"][0]["format"]
-          format_uid =  row["formats"][0]["uid"]
-
-          new_records.each do |record|
-            if uid == record["uid"]
-              formats = record["formats"].select{|x| x["format"] == row_format}
-              if formats.empty?
-                record["formats"].push(
-                {
-                  "uid" =>  format_uid,
-                  "format" => row_format,
-                  "quantity" => 1
-                })
-              else
-                formats[0]["quantity"] += 1 #increment quantity
-              end
-            end
-          end
-        end
-      end
-      new_records
-    end
-  end
+   end
 
   class PipeFile < CsvFile
     def import_file(filename,col_sep=' | ',headers = %w(quanitity format release year artist title))
