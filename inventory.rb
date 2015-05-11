@@ -15,7 +15,7 @@ class Inventory
 
   def load_new_inventory(filename)
     @records = merge_records_sets(records,load_file(filename))
-    persist()
+    persist
   end
 
   def search_inventory(search_field, query)
@@ -29,6 +29,7 @@ class Inventory
   def persist
     #the concept is that the file will be overwritten everytime
     File.open(INVENTORYSTORE.to_s,"w"){ |f| f << JSON.pretty_generate(@records)}
+    @records
   end
 
   def load_file(filename)
@@ -55,15 +56,15 @@ class Inventory
     uid = []
     simple_records.each do |row|
 
-      if current_inventory.select{|x| x["uid"] == row["uid"]}.empty? #find the record we are intersted in
+      if current_inventory.select{|x| x["uid"].downcase == row["uid"].downcase }.empty? #find the record we are intersted in
         current_inventory.push row
       else
-        uid = row["uid"]
+        uid = row["uid"].downcase
         row_format =  row["formats"][0]["format"]
-        format_uid =  row["formats"][0]["uid"]
+        format_uid =  row["formats"][0]["uid"].downcase
 
         current_inventory.each do |record|
-          if uid == record["uid"]
+          if uid == record["uid"].downcase
             formats = record["formats"].select{|x| x["format"] == row_format}
             if formats.empty?
               record["formats"].push(
