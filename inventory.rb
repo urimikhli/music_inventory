@@ -19,7 +19,7 @@ class Inventory
   end
 
   def search_inventory(search_field, query_field)
-    output(@records.select{|x| /#{query_field.downcase}/.match(x[search_field].downcase)}.sort_by { |hsh| hsh[search_field] })
+    output records_search(search_field, query_field)
   end
 
   def purchase(uid)
@@ -27,6 +27,9 @@ class Inventory
 
   private
 
+  def records_search(search_field, query_field)
+    @records.select{|x| /#{query_field.downcase}/.match(x[search_field].downcase) }.sort_by { |hsh| hsh[search_field] }
+  end
   def persist
     #the concept is that the file will be overwritten everytime
     File.open(INVENTORYSTORE.to_s,"w"){ |f| f << JSON.pretty_generate(@records)}
