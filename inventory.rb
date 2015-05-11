@@ -7,14 +7,15 @@ require 'byebug'
 class Inventory
   attr_accessor :records
 
-  INVETORYSTORE = 'db/inventory.json'
+  INVENTORYSTORE = 'db/inventory.json'
 
   def initialize
-    @records = load_file(INVETORYSTORE.to_s)
+    @records = load_file(INVENTORYSTORE.to_s)
   end
 
   def load_new_inventory(filename)
     @records = merge_records_sets(records,load_file(filename))
+    persist()
   end
 
   def search_inventory(search_field, query)
@@ -25,7 +26,9 @@ class Inventory
 
   private
 
-  def persist(inventory_records)
+  def persist
+    #the concept is that the file will be overwritten everytime
+    File.open(INVENTORYSTORE.to_s,"w"){ |f| f << JSON.pretty_generate(@records)}
   end
 
   def load_file(filename)
@@ -78,8 +81,6 @@ class Inventory
     end
     current_inventory
   end
-
-
 
   class JsonFile
     def import_file(filename)
