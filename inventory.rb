@@ -59,16 +59,15 @@ class Inventory
 
   class CsvFile
     def import_file(filename,col_sep= ',',headers = %w(artist title format year))
-      new_records = []
+      simple_records = []
       CSV.foreach(filename, {:col_sep => col_sep, :headers => headers}) do |row|
-         new_records.push convert_to_inventory(row)
+        simple_records.push convert_to_hash(row)
       end
-      new_records
+      convert_to_inventory(simple_records)
     end
     private
-    def convert_to_inventory(row)
-      #dont care about the dupes, can get rid of them more easily when merging into the inventory records
-        {
+    def convert_to_hash(row)
+      {
           "uid" =>  row["artist"].to_s + row["title"].to_s + row["year"].to_s,
           "artist" =>  row["artist"],
           "title" =>  row["title"],
@@ -81,6 +80,38 @@ class Inventory
             }
           ]
         }
+    end
+    def convert_to_inventory(simple_records)
+      format_uid = []
+      uid = []
+      new_records = []
+      simple_records.each do |row|
+
+        if new_records.select{|x| x["uid"] == row["uid"]}.empty? #find the record we are intersted in
+          new_records.push row
+        else
+          uid = row["uid"]
+          row_format =  row["formats"][0]["format"]
+          format_uid =  row["formats"][0]["uid"]
+
+          new_records.each do |record|
+            if uid == record["uid"]
+              formats = record["formats"].select{|x| x["format"] == row_format}
+              if formats.empty?
+                record["formats"].push(
+                {
+                  "uid" =>  format_uid,
+                  "format" => row_format,
+                  "quantity" => 1
+                })
+              else
+                formats[0]["quantity"] += 1 #increment quantity
+              end
+            end
+          end
+        end
+      end
+      new_records
     end
   end
 
