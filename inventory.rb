@@ -19,7 +19,7 @@ class Inventory
   end
 
   def search_inventory(search_field, query)
-    view_records = @records.select{|x| x[search_field.to_s] == query.to_s }
+    view_records = @records.select{|x| /#{x[search_field.to_s]}/.match(query.to_s) }
     output(view_records)
   end
 
