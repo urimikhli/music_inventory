@@ -23,31 +23,36 @@ class Inventory
   end
 
   def purchase(format_uid)
-    album = format_search(format_uid)
+    album = album_search(format_uid)
     return puts "The uid: #{format_uid} does not exist." if album.nil?
 
-    purchase_format = album["formats"].select{|y| format_uid.downcase == y["uid"].downcase }.last
-
+    purchase_format = format_search album["formats"], format_uid
     return puts "There is no album #{format_uid} available in the inventory" if purchase_format.nil?
 
-    purchase_format["quantity"] -= 1
-
+    decrement_quantity purchase_format
     puts "Removed 1 #{purchase_format['format']} of #{album["title"]} by #{album["artist"]} from the inventory"
 
     cleanup_inventory album #remove any records with quantity 0
 
     persist
-
   end
 
   private
+
+  def decrement_quantity(purchase_format)
+    purchase_format["quantity"] -= 1
+  end
 
   def cleanup_inventory(album)
     album["formats"].delete_if {|x| x['quantity'] == 0}
     @records.delete_if {|x| x["formats"].empty?}
   end
 
-  def format_search(format_uid)
+  def format_search(album_formats =[], format_uid)
+    album_formats.select{|y| format_uid.downcase == y["uid"].downcase }.last
+  end
+
+  def album_search(format_uid)
     @records.select{|x| /#{x["uid"].downcase}/.match(format_uid.downcase) }.last
   end
 
