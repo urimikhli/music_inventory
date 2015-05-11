@@ -19,6 +19,8 @@ class Inventory
   end
 
   def search_inventory(search_field, query)
+    view_records = @records.select{|x| x[search_field.to_s] == query.to_s }
+    output(view_records)
   end
 
   def purchase(uid)
@@ -81,6 +83,19 @@ class Inventory
       end
     end
     current_inventory
+  end
+
+  def output(view_records)
+    view_records.each do |record|
+      puts "
+Artist: #{record['artist']}
+Album:  #{record['title']}
+Released: #{record['year']}
+"
+      record["formats"].each do |format|
+        puts "#{format['format']}(#{format['quantity']}): #{format['uid']}"
+      end
+    end
   end
 
   class JsonFile
