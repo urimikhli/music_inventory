@@ -18,9 +18,8 @@ class Inventory
     persist
   end
 
-  def search_inventory(search_field, query)
-    view_records = @records.select{|x| /#{query.downcase}/.match(x[search_field].downcase) }
-    output(view_records)
+  def search_inventory(search_field, query_field)
+    output(@records.select{|x| /#{query_field.downcase}/.match(x[search_field].downcase)}.sort_by { |hsh| hsh[search_field] })
   end
 
   def purchase(uid)
