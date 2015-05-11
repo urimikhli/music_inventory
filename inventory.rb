@@ -145,18 +145,18 @@ class Inventory
       format_uid = row["artist"].to_s + row["title"].to_s + row["year"].to_s + row["format"].to_s
       row_format = row["format"].to_s
       {
-          "uid" =>  uid.delete(' '),
+          "uid" =>  uid.delete(' ').downcase,
           "artist" =>  row["artist"],
           "title" =>  row["title"],
           "year" =>  row["year"],
           "formats" =>  [
             {
-              "uid" =>  format_uid.delete(' '),
+              "uid" =>  format_uid.delete(' ').downcase,
               "format" => row_format.downcase.eql?("cd") ? row_format.upcase : row_format.capitalize,
               "quantity" =>  1
             }
           ]
-        }
+      }
     end
    end
 
