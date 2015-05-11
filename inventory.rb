@@ -131,7 +131,7 @@ Released: #{record['year']}
    end
 
   class PipeFile < CsvFile
-    def import_file(filename,col_sep=' | ',headers = %w(quanitity format release year artist title))
+    def import_file(filename,col_sep=' | ',headers = %w(quanitity format year artist title))
       super(filename,col_sep,headers)
     end
 
