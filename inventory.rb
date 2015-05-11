@@ -30,7 +30,7 @@ class Inventory
     return puts "There is no album #{format_uid} available in the inventory" if purchase_format.nil?
 
     decrement_quantity purchase_format
-    puts "Removed 1 #{purchase_format['format']} of #{album["title"]} by #{album["artist"]} from the inventory"
+    puts "Removed 1 #{purchase_format['format']} of #{album["album"]} by #{album["artist"]} from the inventory"
 
     cleanup_inventory album #remove any records with quantity 0
 
@@ -103,7 +103,7 @@ class Inventory
   def output(view_records)
     view_records.each do |record|
       puts "Artist: #{record['artist']}"
-      puts "Album:  #{record['title']}"
+      puts "Album:  #{record['album']}"
       puts "Released: #{record['year']}"
 
       record["formats"].each do |format|
@@ -152,7 +152,7 @@ class Inventory
       {
           "uid" =>  uid.delete(' ').downcase,
           "artist" =>  row["artist"],
-          "title" =>  row["title"],
+          "album" =>  row["title"],
           "year" =>  row["year"],
           "formats" =>  [
             {
