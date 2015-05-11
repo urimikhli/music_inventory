@@ -8,6 +8,7 @@ class Inventory
   attr_accessor :records
 
   INVENTORYSTORE = 'db/inventory.json'
+  VALIDSEARCHFIELDS = %w(quanitity format year artist album)
 
   def initialize(filename = INVENTORYSTORE.to_s)
     @records = load_file(filename)
@@ -19,6 +20,7 @@ class Inventory
   end
 
   def search_inventory(search_field, query_field)
+    return unless validate_field search_field
     output records_search(search_field, query_field)
   end
 
@@ -94,6 +96,10 @@ class Inventory
     #the concept is that the file will be overwritten everytime
     File.open(INVENTORYSTORE.to_s,"w"){ |f| f << JSON.pretty_generate(@records)}
     @records
+  end
+
+  def validate_field(search_field = "")
+    VALIDSEARCHFIELDS.select{|x| x.downcase == search_field.downcase}.empty? ? false : true
   end
 
   def records_search(search_field, query_field)
