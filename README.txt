@@ -1,11 +1,21 @@
 Discussion:
 
+There are many opportunities to improve this code. I purposly kept duplications and allowed conditionals so that the refactor path would be a little clearer. The next step has to be a set of tests that backstop the behavior of the Inventory API (load_inventory, search_inventory, purchase.) With those in place I can refactor towards better, more OO code.
 
+Next Steps, in no particular order:
+
+- Tests of inventory api
+- One of the things to consider in a refactoring is perhaps the creation of a Record class to do away with the majority of the Hash logic... Which I dislike, but is easier for me to conceptualize when under the gun.
+- The inheritance of PipFile from CsvFile is suspect... Should investigate maybe creating a role class called Delimiter.
+- Better originization of code. Put Inventory.rb in lib/ split out the sub classes into their own file. Any new classes that are built would go as files in lib
+
+Note:
+- If not for the restriction on Ruby core libs I would have just used ActiveRecord to make this whole object alot simpler.
 
 
 Original Instructions:
 ---------------------
-
+---------------------
 
 Overview
 --------
