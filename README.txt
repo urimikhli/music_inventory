@@ -2,7 +2,7 @@ Discussion:
 
 There are many opportunities to improve this code. I purposly kept duplications and allowed conditionals so that the refactor path would be a little clearer. The next step has to be a set of tests that backstop the behavior of the Inventory API (load_inventory, search_inventory, purchase.) With those in place I can refactor towards better, more OO code.
 
-Next Steps, in no particular order:
+Next Steps, in no particular order other then build tests first:
 
 - Tests of inventory api
 - One of the things to consider in a refactoring is perhaps the creation of a Record class to do away with the majority of the Hash logic... Which I dislike, but is easier for me to conceptualize when under the gun.
